@@ -1,11 +1,11 @@
 module Calculator
-  class MortgagePayment
+  class MortgageAmount
     include Callable
 
-    attr_reader :errors, :payment
+    attr_reader :errors, :amount
 
     def initialize(params)
-      @asking_price = params[:asking_price].to_d
+      @payment_amount = params[:payment_amount].to_d
       @down_payment = params[:down_payment].to_d
       @amortization_period = params[:amortization_period].to_i
       @payment_schedule = params[:payment_schedule]
@@ -23,7 +23,7 @@ module Calculator
     private
 
     def process_service_request
-      @payment = mortgage.payment(@asking_price - @down_payment)
+      @amount = mortgage.amount(@payment_amount)
     end
 
     def mortgage
@@ -35,12 +35,8 @@ module Calculator
     end
 
     def validate
-      unless @asking_price > 0
-        error("The asking price value must be greater than 0")
-      end
-
-      unless @down_payment > 0
-        error("The down payment value must be greater than 0")
+      unless @payment_amount > 0
+        error("The payment amount value must be greater than 0")
       end
 
       unless valid_period_value?
@@ -50,14 +46,6 @@ module Calculator
       unless valid_frequency_value?
         error("The payment schedule value must be one of \'#{Amortization::Frequency::PAYMENTS_PER_YEAR.keys.join("','")}")
       end
-
-      unless @asking_price > @down_payment
-        error("The asking price value must be greater than the down payment value")
-      end
-
-      unless sufficient_down_payment?
-        error("The down payment is not sufficient for the asking price")
-      end
     end
 
     def valid_frequency_value?
@@ -66,10 +54,6 @@ module Calculator
 
     def valid_period_value?
       Loan::Mortgage.valid_mortgage_period?(@amortization_period)
-    end
-
-    def sufficient_down_payment?
-      Loan::Mortgage.sufficient_down_payment?(@down_payment, @asking_price)
     end
 
     def error(error)

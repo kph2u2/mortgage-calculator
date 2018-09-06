@@ -9,6 +9,16 @@ class MortgageCalculatorController < ApplicationController
     end 
   end
 
+  def mortgage_amount
+    service = Calculator::MortgageAmount.call(mortgage_amount_parameters)
+
+    if service.errors.any?
+      render json: { errors: service.errors }, status: :unprocessable_entity
+    else
+      render json: { payment: service.amount }
+    end 
+  end
+
   private
 
   def payment_amount_parameters
@@ -27,5 +37,22 @@ class MortgageCalculatorController < ApplicationController
       :payment_schedule,
       :amortization_period,
     ]
+  end
+
+  def mortgage_amount_parameters
+    params.require(amount_required_parameters)
+    params.permit(*amount_permitted_parameters)
+  end
+
+  def amount_required_parameters
+    [
+      :payment_amount,
+      :payment_schedule,
+      :amortization_period,
+    ]
+  end
+
+  def amount_permitted_parameters
+    amount_required_parameters << :down_payment
   end
 end
