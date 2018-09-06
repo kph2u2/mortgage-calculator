@@ -2,13 +2,9 @@ require 'rails_helper'
 
 module Loan
   describe Mortgage do
-    describe "#sufficient_down_payment?" do
+    describe "::sufficient_down_payment?" do
       let(:subject) do
-        described_class.new(
-          30,
-          "monthly",
-          down_payment
-        ).sufficient_down_payment?(amount)
+        described_class.sufficient_down_payment?(down_payment, amount)
       end
 
       context "loan is less than $500000" do

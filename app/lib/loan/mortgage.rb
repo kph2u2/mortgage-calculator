@@ -8,25 +8,31 @@ module Loan
 
     attr_reader :period, :frequency
 
-    def initialize(period, frequency, down_payment=0)
+    def initialize(period, frequency)
       @period = period
-      @down_payment = down_payment
       @frequency = frequency
+      @calculator = Amortization::Calculator.new(self)
     end
 
     def self.valid_mortgage_period?(number_of_years)
       AMORTIZATION_RANGE.include?(number_of_years)
     end
 
-    def sufficient_down_payment?(requested_amount)
-      @down_payment >= minimum_down_payment(requested_amount)
+    def self.sufficient_down_payment?(down_payment, requested_amount)
+      down_payment >= minimum_down_payment(requested_amount)
+    end
+
+    def payment(principal_amount)
+      @calculator.payment_from_principal(principal_amount)
+    end
+
+    def amount(payment_amount)
+      @calculator.principal_from_payment(payment_amount)
     end
 
     private
 
-    def minimum_down_payment(requested_amount)
-      return @minimum_down_payment if defined?(@minimum_down_payment)
-
+    def self.minimum_down_payment(requested_amount)
       @minimum_down_payment =
         if requested_amount > DOWN_PAYMENT_THRESHOLD
           DOWN_PAYMENT_BASE +
