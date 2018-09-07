@@ -1,5 +1,5 @@
 module Calculator
-  class MortgageAmount < ServiceBase
+  class MortgageAmount < BaseService
     attr_reader :amount
 
     def initialize(params)
@@ -13,7 +13,7 @@ module Calculator
     private
 
     def process_service_request
-      @amount = mortgage.amount(@payment_amount)
+      @amount = mortgage.amount(@payment_amount) + @down_payment
     end
 
     def mortgage

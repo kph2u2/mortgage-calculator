@@ -39,7 +39,7 @@ module Amortization
     end
 
     def interest_rate
-      @interest_rate ||= "0.025".to_d
+      @interest_rate ||= Context::ContextQuery.call.context.interest_rate
     end
 
     def payments_per_year(frequency)

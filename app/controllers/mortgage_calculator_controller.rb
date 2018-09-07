@@ -15,11 +15,18 @@ class MortgageCalculatorController < ApplicationController
     if service.errors.any?
       render json: { errors: service.errors }, status: :unprocessable_entity
     else
-      render json: { payment: service.amount }
+      render json: { amount: service.amount }
     end 
   end
 
   def update
+    service = Context::ContextPersistence.call(update_parameters)
+
+    if service.errors.any?
+      render json: { errors: service.errors }, status: :unprocessable_entity
+    else
+      render json: { interest_rate: service.interest_rate * 100, previous_interest_rate: service.previous_interest_rate * 100 }
+    end 
   end
 
   private
@@ -57,5 +64,9 @@ class MortgageCalculatorController < ApplicationController
 
   def amount_permitted_parameters
     amount_required_parameters << :down_payment
+  end
+
+  def update_parameters
+    params.require(:mortgage_calculator).permit(:interest_rate)
   end
 end

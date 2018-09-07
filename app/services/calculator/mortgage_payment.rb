@@ -1,5 +1,5 @@
 module Calculator
-  class MortgagePayment < ServiceBase
+  class MortgagePayment < BaseService
     attr_reader :payment
 
     def initialize(params)
