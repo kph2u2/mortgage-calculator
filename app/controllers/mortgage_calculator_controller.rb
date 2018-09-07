@@ -19,6 +19,9 @@ class MortgageCalculatorController < ApplicationController
     end 
   end
 
+  def update
+  end
+
   private
 
   def payment_amount_parameters
