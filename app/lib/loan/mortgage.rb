@@ -26,7 +26,7 @@ module Loan
       @calculator.payment_from_principal(principal_amount)
     end
 
-    def amount(payment_amount)
+    def principal(payment_amount)
       @calculator.principal_from_payment(payment_amount)
     end
 

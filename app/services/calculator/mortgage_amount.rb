@@ -17,11 +17,29 @@ module Calculator
     private
 
     def process_service_request
-      @amount = mortgage.amount(@payment_amount) + @down_payment
+      calculate_principal
+      calculate_insurance_cost
+      set_mortgage_amount
+    end
+
+    def set_mortgage_amount
+      @amount = @principal + @down_payment + @insurance_cost
+    end
+
+    def calculate_insurance_cost
+      @insurance_cost = @down_payment > 0 ? insurance.cost : 0
+    end
+
+    def calculate_principal
+      @principal = mortgage.principal(@payment_amount)
     end
 
     def mortgage
       Loan::Mortgage.new(@amortization_period, @payment_schedule)
+    end
+
+    def insurance
+      Loan::Insurance.new(@principal, @down_payment)
     end
 
     def validate
