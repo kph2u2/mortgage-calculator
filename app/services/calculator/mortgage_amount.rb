@@ -19,10 +19,10 @@ module Calculator
     def process_service_request
       calculate_principal
       calculate_insurance_cost
-      set_mortgage_amount
+      set_amount
     end
 
-    def set_mortgage_amount
+    def set_amount
       @amount = @principal + @down_payment + @insurance_cost
     end
 

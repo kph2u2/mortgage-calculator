@@ -7,6 +7,7 @@ module Calculator
       @down_payment = params[:down_payment].to_d
       @amortization_period = params[:amortization_period].to_i
       @payment_schedule = params[:payment_schedule]
+      @finance_insurance = finance_insurance?(params[:finance_insurance])
       @errors = []
     end
 
@@ -17,7 +18,25 @@ module Calculator
     private
 
     def process_service_request
-      @payment = mortgage.payment(@asking_price - @down_payment)
+      calculate_principal
+      calculate_insurance_cost
+      set_payment
+    end
+
+    def set_payment
+      @payment = mortgage.payment(@principal + @insurance_cost)
+    end
+
+    def calculate_principal
+      @principal = @asking_price - @down_payment
+    end
+
+    def calculate_insurance_cost
+      @insurance_cost = @finance_insurance ? insurance.cost : 0
+    end
+
+    def insurance
+      Loan::Insurance.new(@principal, @down_payment)
     end
 
     def mortgage
@@ -60,6 +79,10 @@ module Calculator
 
     def sufficient_down_payment?
       Loan::Mortgage.sufficient_down_payment?(@down_payment, @asking_price)
+    end
+
+    def finance_insurance?(flag)
+      flag ? flag == "true" : false
     end
   end
 end

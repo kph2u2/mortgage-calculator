@@ -19,16 +19,16 @@ class MortgageCalculatorController < ApplicationController
   end
 
   def payment_required_parameters
-    payment_permitted_parameters
-  end
-
-  def payment_permitted_parameters
     [
       :asking_price,
       :down_payment,
       :payment_schedule,
       :amortization_period,
     ]
+  end
+
+  def payment_permitted_parameters
+    payment_required_parameters << :finance_insurance
   end
 
   def mortgage_amount_parameters
