@@ -16,6 +16,18 @@ module Calculator
 
     private
 
+    def self.required_parameters
+      [
+        :payment_amount,
+        :payment_schedule,
+        :amortization_period,
+      ]
+    end
+
+    def self.permitted_parameters
+      required_parameters << :down_payment
+    end
+
     def process_service_request
       calculate_principal
       calculate_insurance_cost

@@ -3,11 +3,20 @@ class BaseService
 
   attr_reader :errors
 
+  def self.check_parameters(params)
+    if self.respond_to?(:required_parameters) &&
+       self.respond_to?(:permitted_parameters)
+      return params.permit(*permitted_parameters).tap do |parameter|
+        parameter.require(required_parameters)
+      end
+    end
+  end
+
   def call
     @errors ||= []
 
     validate
-    return self unless valid?
+    return self unless successful?
 
     process_service_request
     self
@@ -21,7 +30,7 @@ class BaseService
   def process_service_request
   end
 
-  def valid?
+  def successful?
     !@errors.any?
   end
 

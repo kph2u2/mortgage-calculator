@@ -18,5 +18,15 @@ module Context
     def serializer_class
       ContextPersistenceSerializer
     end
+
+    private
+
+    def self.required_parameters
+      [:interest_rate]
+    end
+
+    def self.permitted_parameters
+      required_parameters
+    end
   end
 end
