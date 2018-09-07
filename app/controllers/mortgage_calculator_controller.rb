@@ -1,32 +1,14 @@
 class MortgageCalculatorController < ApplicationController
   def payment_amount
-    service = Calculator::MortgagePayment.call(payment_amount_parameters)
-
-    if service.errors.any?
-      render json: { errors: service.errors }, status: :unprocessable_entity
-    else
-      render json: { payment: service.payment }
-    end 
+    render_results(Calculator::MortgagePayment.call(payment_amount_parameters))
   end
 
   def mortgage_amount
-    service = Calculator::MortgageAmount.call(mortgage_amount_parameters)
-
-    if service.errors.any?
-      render json: { errors: service.errors }, status: :unprocessable_entity
-    else
-      render json: { amount: service.amount }
-    end 
+    render_results(Calculator::MortgageAmount.call(mortgage_amount_parameters))
   end
 
   def update
-    service = Context::ContextPersistence.call(update_parameters)
-
-    if service.errors.any?
-      render json: { errors: service.errors }, status: :unprocessable_entity
-    else
-      render json: { interest_rate: service.interest_rate * 100, previous_interest_rate: service.previous_interest_rate * 100 }
-    end 
+    render_results(Context::ContextPersistence.call(update_parameters))
   end
 
   private
@@ -68,5 +50,15 @@ class MortgageCalculatorController < ApplicationController
 
   def update_parameters
     params.require(:mortgage_calculator).permit(:interest_rate)
+  end
+
+  private
+
+  def render_results(service)
+    if service.errors.any?
+      render json: service, serializer: ServiceErrorSerializer, status: :unprocessable_entity
+    else
+      render json: service, serializer: service.serializer_class
+    end 
   end
 end

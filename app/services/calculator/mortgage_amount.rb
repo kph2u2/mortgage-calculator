@@ -4,10 +4,14 @@ module Calculator
 
     def initialize(params)
       @payment_amount = params[:payment_amount].to_d
-      @down_payment = params[:down_payment].to_d
+      @down_payment = params[:down_payment] ? params[:down_payment].to_d : 0
       @amortization_period = params[:amortization_period].to_i
       @payment_schedule = params[:payment_schedule]
       @errors = []
+    end
+
+    def serializer_class
+      MortgageAmountSerializer
     end
 
     private

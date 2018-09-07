@@ -14,5 +14,9 @@ module Context
     rescue
       error("An internal error occurred updating the interest rate.")
     end
+
+    def serializer_class
+      ContextPersistenceSerializer
+    end
   end
 end

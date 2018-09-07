@@ -10,6 +10,10 @@ module Calculator
       @errors = []
     end
 
+    def serializer_class
+      MortgagePaymentSerializer
+    end
+
     private
 
     def process_service_request
