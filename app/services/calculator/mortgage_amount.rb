@@ -1,8 +1,6 @@
 module Calculator
-  class MortgageAmount
-    include Callable
-
-    attr_reader :errors, :amount
+  class MortgageAmount < ServiceBase
+    attr_reader :amount
 
     def initialize(params)
       @payment_amount = params[:payment_amount].to_d
@@ -10,14 +8,6 @@ module Calculator
       @amortization_period = params[:amortization_period].to_i
       @payment_schedule = params[:payment_schedule]
       @errors = []
-    end
-
-    def call
-      validate
-      return self unless valid?
-
-      process_service_request
-      self
     end
 
     private
@@ -28,10 +18,6 @@ module Calculator
 
     def mortgage
       Loan::Mortgage.new(@amortization_period, @payment_schedule)
-    end
-
-    def valid?
-      !@errors.any?
     end
 
     def validate
@@ -54,10 +40,6 @@ module Calculator
 
     def valid_period_value?
       Loan::Mortgage.valid_mortgage_period?(@amortization_period)
-    end
-
-    def error(error)
-      @errors << error
     end
   end
 end
