@@ -16,12 +16,11 @@ class MortgageCalculatorController < ApplicationController
   private
 
   def render_results(service_class, params)
-    filtered_parameters = service_class.check_parameters(params)
-    service = service_class.call(filtered_parameters)
+    service = service_class.call(params)
     if service.errors.any?
       render json: service, serializer: ServiceErrorSerializer, status: :unprocessable_entity
     else
-      render json: service, serializer: service.serializer_class
+      render json: service, serializer: service_class.serializer_class
     end 
   end
 end

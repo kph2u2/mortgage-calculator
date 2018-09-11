@@ -2,30 +2,23 @@ module Calculator
   class MortgageAmount < BaseService
     attr_reader :amount
 
-    def initialize(params)
-      @payment_amount = params[:payment_amount].to_d
-      @down_payment = params[:down_payment] ? params[:down_payment].to_d : 0
-      @amortization_period = params[:amortization_period].to_i
-      @payment_schedule = params[:payment_schedule]
-      @errors = []
+    private
+
+    def self.parameter_class
+      Calculator::MortgageAmountParameters
     end
 
-    def serializer_class
+    def self.serializer_class
       MortgageAmountSerializer
     end
 
-    private
-
-    def self.required_parameters
+    def self.permitted_parameters
       [
         :payment_amount,
         :payment_schedule,
         :amortization_period,
+        :down_payment,
       ]
-    end
-
-    def self.permitted_parameters
-      required_parameters << :down_payment
     end
 
     def process_service_request
@@ -35,45 +28,23 @@ module Calculator
     end
 
     def set_amount
-      @amount = @principal + @down_payment + @insurance_cost
+      @amount = @principal + @params.down_payment + @insurance_cost
     end
 
     def calculate_insurance_cost
-      @insurance_cost = @down_payment > 0 ? insurance.cost : 0
+      @insurance_cost = @params.down_payment > 0 ? insurance.cost : 0
     end
 
     def calculate_principal
-      @principal = mortgage.principal(@payment_amount)
+      @principal = mortgage.principal(@params.payment_amount)
     end
 
     def mortgage
-      Loan::Mortgage.new(@amortization_period, @payment_schedule)
+      Loan::Mortgage.new(@params.amortization_period, @params.payment_schedule)
     end
 
     def insurance
-      Loan::Insurance.new(@principal, @down_payment)
-    end
-
-    def validate
-      unless @payment_amount > 0
-        error("The payment amount value must be greater than 0")
-      end
-
-      unless valid_period_value?
-        error("The amortization period value must be within #{Loan::Mortgage::AMORTIZATION_RANGE} years")
-      end
-
-      unless valid_frequency_value?
-        error("The payment schedule value must be one of \'#{Amortization::Frequency::PAYMENTS_PER_YEAR.keys.join("','")}")
-      end
-    end
-
-    def valid_frequency_value?
-      Amortization::Frequency.valid_frequency?(@payment_schedule)
-    end
-
-    def valid_period_value?
-      Loan::Mortgage.valid_mortgage_period?(@amortization_period)
+      Loan::Insurance.new(@principal, @params.down_payment)
     end
   end
 end

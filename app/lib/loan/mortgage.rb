@@ -2,8 +2,8 @@ module Loan
   class Mortgage
     DOWN_PAYMENT_THRESHOLD = 500000
     DOWN_PAYMENT_BASE = 25000
-    BASE_PERCENTAGE = "0.05".to_d
-    ADDITIONAL_PERCENTAGE = "0.1".to_d
+    BASE_PERCENTAGE = 0.05.to_d
+    ADDITIONAL_PERCENTAGE = 0.1.to_d
     AMORTIZATION_RANGE = 5..25
 
     attr_reader :period, :frequency

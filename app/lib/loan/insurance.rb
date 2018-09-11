@@ -1,6 +1,6 @@
 module Loan
   class Insurance
-    INSURANCE_PERCENTAGE_THRESHOLD = "0.2".to_d
+    INSURANCE_PERCENTAGE_THRESHOLD = 0.2.to_d
     INSURANCE_AMOUNT_THRESHOLD = 1000000
 
     def initialize(amount, down_payment)

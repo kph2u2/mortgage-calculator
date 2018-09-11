@@ -12,6 +12,10 @@ module Amortization
       PAYMENTS_PER_YEAR[payment_frequency]
     end
 
+    def self.valid_frequencies
+      PAYMENTS_PER_YEAR.keys
+    end
+
     def self.valid_frequency?(frequency)
       PAYMENTS_PER_YEAR.keys.include?(frequency)
     end

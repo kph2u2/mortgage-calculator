@@ -3,19 +3,20 @@ class BaseService
 
   attr_reader :errors
 
-  def self.check_parameters(params)
-    if self.respond_to?(:required_parameters) &&
-       self.respond_to?(:permitted_parameters)
-      return params.permit(*permitted_parameters).tap do |parameter|
-        parameter.require(required_parameters)
+  def initialize(params)
+    @errors = []
+    if params.present?
+      filter_to_permitted_parameters(params).tap do |permitted|
+        validate_and_coerce_parameters(permitted).tap do |validated_and_coerced|
+          @params = validated_and_coerced
+          @errors << @params.errors unless @params.valid?
+        end
       end
     end
   end
 
   def call
     @errors ||= []
-
-    validate
     return self unless successful?
 
     process_service_request
@@ -24,7 +25,12 @@ class BaseService
 
   private
 
-  def validate
+  def filter_to_permitted_parameters(params)
+    params.permit(self.class.permitted_parameters)
+  end
+
+  def validate_and_coerce_parameters(parameters)
+    self.class.parameter_class.new(parameters)
   end
 
   def process_service_request
