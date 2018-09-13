@@ -3,7 +3,7 @@ module Calculator
     attributes :payment
 
     def payment
-      object.payment
+      object.payment.to_s
     end
   end
 end

@@ -1,7 +1,7 @@
 module Loan
   class Insurance
     INSURANCE_PERCENTAGE_THRESHOLD = 0.2.to_d
-    INSURANCE_AMOUNT_THRESHOLD = 1000000
+    INSURANCE_AMOUNT_THRESHOLD = Money.new(100000000)
 
     def initialize(amount, down_payment)
       @amount = amount
@@ -10,7 +10,7 @@ module Loan
 
     def cost
       return 0 unless qualifies_for_insurance?
-      (insurance_cost_percentage * @amount).round(2)
+      @amount * insurance_cost_percentage
     end
 
     private
@@ -29,7 +29,7 @@ module Loan
     end
 
     def down_payment_percentage
-      (@down_payment.to_d / @amount).round(4)
+      (@down_payment / @amount).round(4)
     end
 
     def qualifies_for_insurance?

@@ -6,11 +6,11 @@ module Amortization
     end
 
     def principal_from_payment(payment)
-      (payment / expression_value).round(2)
+      payment / expression_value
     end
 
     def payment_from_principal(principal)
-      (principal * expression_value).round(2)
+      principal * expression_value
     end
 
     private

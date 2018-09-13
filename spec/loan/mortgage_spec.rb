@@ -8,39 +8,39 @@ module Loan
       end
 
       context "loan is less than $500000" do
-        let(:amount) { 250000 }
+        let(:amount) { Money.new(25000000) }
 
         context "down payment is less required" do
-          let(:down_payment) { 12499 }
+          let(:down_payment) { Money.new(1249900) }
           it { is_expected.to be false }
         end
 
         context "down payment matches required amount" do
-          let(:down_payment) { 12500 }
+          let(:down_payment) { Money.new(1250000) }
           it { is_expected.to be true }
         end
 
         context "down payment is greater than required" do
-          let(:down_payment) { 15000 }
+          let(:down_payment) { Money.new(1500000) }
           it { is_expected.to be true }
         end
       end
 
       context "loan is greater than $500000" do
-        let(:amount) { 750000 }
+        let(:amount) { Money.new(75000000) }
 
         context "down payment is less than required" do
-          let(:down_payment) { 45000 }
+          let(:down_payment) { Money.new(4500000) }
           it { is_expected.to be false }
         end
 
         context "down payment matches required amount" do
-          let(:down_payment) { 50000 }
+          let(:down_payment) { Money.new(5000000) }
           it { is_expected.to be true }
         end
 
         context "down payment is greater than required" do
-          let(:down_payment) { 55000 }
+          let(:down_payment) { Money.new(5500000) }
           it { is_expected.to be true }
         end
       end

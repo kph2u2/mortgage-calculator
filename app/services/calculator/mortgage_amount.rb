@@ -5,7 +5,7 @@ module Calculator
     private
 
     def self.parameter_class
-      Calculator::MortgageAmountParameters
+      MortgageAmountParameters
     end
 
     def self.serializer_class
@@ -32,7 +32,7 @@ module Calculator
     end
 
     def calculate_insurance_cost
-      @insurance_cost = @params.down_payment > 0 ? insurance.cost : 0
+      @insurance_cost = @params.down_payment > 0 ? insurance.cost : Money.new(0)
     end
 
     def calculate_principal

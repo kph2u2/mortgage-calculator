@@ -1,7 +1,7 @@
 module Loan
   class Mortgage
-    DOWN_PAYMENT_THRESHOLD = 500000
-    DOWN_PAYMENT_BASE = 25000
+    DOWN_PAYMENT_THRESHOLD = Money.new(50000000)
+    DOWN_PAYMENT_BASE = Money.new(2500000)
     BASE_PERCENTAGE = 0.05.to_d
     ADDITIONAL_PERCENTAGE = 0.1.to_d
     AMORTIZATION_RANGE = 5..25
@@ -36,12 +36,12 @@ module Loan
       @minimum_down_payment =
         if requested_amount > DOWN_PAYMENT_THRESHOLD
           DOWN_PAYMENT_BASE +
-          (ADDITIONAL_PERCENTAGE * (requested_amount - DOWN_PAYMENT_THRESHOLD))
+          ((requested_amount - DOWN_PAYMENT_THRESHOLD) * ADDITIONAL_PERCENTAGE)
         else
-          BASE_PERCENTAGE * requested_amount
+          requested_amount * BASE_PERCENTAGE
         end
 
-      @minimum_down_payment.round(2)
+      @minimum_down_payment
     end
   end
 end

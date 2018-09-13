@@ -2,7 +2,9 @@ module MortgageValidations
   extend ActiveSupport::Concern
 
   def sufficient_down_payment?
-    unless Loan::Mortgage.sufficient_down_payment?(down_payment, asking_price)
+    if down_payment &&
+       asking_price &&
+       !Loan::Mortgage.sufficient_down_payment?(down_payment, asking_price)
       errors.add(
         :down_payment_ratio,
         "Down payment is not sufficient for the asking price"
@@ -10,20 +12,9 @@ module MortgageValidations
     end
   end
 
-  def valid_asking_price?
-    unless asking_price > 0
-      errors.add(:asking_price, "The asking price value must be greater than 0")
-    end
-  end
-
-  def valid_down_payment?
-    unless down_payment > 0
-      errors.add(:down_payment, "The down payment value must be greater than 0")
-    end
-  end
-
   def valid_amortization_period_value?
-    unless Loan::Mortgage.valid_mortgage_period?(amortization_period)
+    if amortization_period &&
+       !Loan::Mortgage.valid_mortgage_period?(amortization_period)
       errors.add(
         :amortization_period,
         %W[
@@ -35,7 +26,8 @@ module MortgageValidations
   end
 
   def valid_frequency_value?
-    unless Amortization::Frequency.valid_frequency?(payment_schedule)
+    if payment_schedule &&
+       !Amortization::Frequency.valid_frequency?(payment_schedule)
       errors.add(
         :frequency_value,
         %W[
@@ -47,7 +39,7 @@ module MortgageValidations
   end
 
   def valid_interest_rate_range?
-    unless (1..99).include?(interest_rate)
+    if interest_rate && !(1..99).include?(interest_rate)
       errors.add(
         :interest_rate,
         "Interest rate must be in the range of 1..99 percent"

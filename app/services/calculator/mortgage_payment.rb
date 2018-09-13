@@ -37,7 +37,7 @@ module Calculator
     end
 
     def calculate_insurance_cost
-      @insurance_cost = @params.finance_insurance ? insurance.cost : 0
+      @insurance_cost = @params.finance_insurance ? insurance.cost : Money.new(0)
     end
 
     def insurance

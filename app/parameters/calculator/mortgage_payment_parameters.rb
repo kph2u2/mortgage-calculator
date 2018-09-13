@@ -2,8 +2,8 @@ module Calculator
   class MortgagePaymentParameters < SimpleParams::Params
     include MortgageValidations
 
-    param :asking_price, type: :decimal, validations: { numericality: { greater_than: 0 }, presence: true }
-    param :down_payment, type: :decimal, validations: { numericality: { greater_than: 0 }, presence: true }
+    param :asking_price, type: :money, validations: { numericality: { greater_than: 0 }, presence: true }
+    param :down_payment, type: :money, validations: { numericality: { greater_than: 0 }, presence: true }
     param :payment_schedule, type: :string, validations: { presence: true }
     param :amortization_period, type: :integer, validations: { presence: true }
     param :finance_insurance, type: :boolean, default: false
